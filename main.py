@@ -1,4 +1,7 @@
 import numpy as np
+import json2 as json
+from tornado.web import Application, RequestHandler
+from tornado.ioloop import IOLoop
 
 def hasBlanks(puzzle):
     for i in range(len(puzzle)):
@@ -48,8 +51,6 @@ def makeNotes(puzzle):
                 notes[i].append([0])
             else:
                 notAllowed = list(set(getSquare(i, j, puzzle) + getRow(i, j, puzzle) + getColumn(i, j, puzzle)))
-                print(nums)
-                print(notAllowed)
                 notes[i].append(list(np.setdiff1d(nums, notAllowed)))
     return notes
 
@@ -96,9 +97,27 @@ def display(puzzle):
             print(str(puzzle[i][j]), end=" ")
         print('\n')
 
-puzzle = getPuzzle()
+# puzzle = getPuzzle()
 
-display(solve(puzzle))
+# display(solve(puzzle))
+
+class SudokuHandler(RequestHandler):
+    def get(self):
+        puzzle = list(json.loads(self.get_argument("puzzle", None, True)))
+        solved = solve(puzzle)
+        print(solved)
+        self.write({'solved': json.dumps(solved)})
+
+
+def make_app():
+    urls = [("/solve", SudokuHandler)]
+    return Application(urls)
+
+
+if __name__ == '__main__':
+    app = make_app()
+    app.listen(3000)
+    IOLoop.instance().start()
 
 
 
