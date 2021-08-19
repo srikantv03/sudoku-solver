@@ -39,7 +39,7 @@ def getColumn(row, col, puzzle):
 
 
 def makeNotes(puzzle):
-    nums = range(1, len(puzzle) + 1)
+    nums = list(range(1, len(puzzle) + 1))
     notes = list()
     for i in range(len(puzzle)):
         notes.append([])
@@ -48,8 +48,28 @@ def makeNotes(puzzle):
                 notes[i].append([0])
             else:
                 notAllowed = list(set(getSquare(i, j, puzzle) + getRow(i, j, puzzle) + getColumn(i, j, puzzle)))
+                print(nums)
+                print(notAllowed)
                 notes[i].append(list(np.setdiff1d(nums, notAllowed)))
     return notes
+
+def decipherNotes(notes, puzzle):
+    amtFixed = 0
+    for i in range(len(puzzle)):
+        for j in range(len(puzzle[0])):
+            if puzzle[i][j] == 0:
+                squareNotes = [j for sub in getSquare(i, j, notes) for j in sub]
+                rowNotes = [j for sub in getRow(i, j, notes) for j in sub]
+                colNotes = [j for sub in getColumn(i, j, notes) for j in sub]
+
+                for k in range(1, len(puzzle)):
+                    if squareNotes.count(k) == 1 or rowNotes.count(k) == 1 or colNotes.count(k) == 1:
+                        amtFixed += 1
+                        puzzle[i][j] = k
+                        break
+    if(amtFixed == 0):
+        return None
+    return puzzle
 
 def solve(puzzle):
     amtFixed = 0
@@ -60,16 +80,20 @@ def solve(puzzle):
                 amtFixed += 1
                 puzzle[i][j] = notes[i][j][0]
     if amtFixed == 0:
-        return puzzle
+        temp = decipherNotes(notes, puzzle)
+        if(temp != None):
+            return solve(temp)
+        else:
+            return puzzle
     if hasBlanks(puzzle):
-        return(solve(puzzle))
+        return solve(puzzle)
     else:
         return puzzle
 
 def display(puzzle):
     for i in range(len(puzzle)):
         for j in range(len(puzzle)):
-            print(str(puzzle[i][j]), end= " ")
+            print(str(puzzle[i][j]), end=" ")
         print('\n')
 
 puzzle = getPuzzle()
