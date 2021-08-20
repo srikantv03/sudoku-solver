@@ -6,7 +6,7 @@ This is just a simple side-project which combines my recreational hobby of sudok
 
 The core algorithm, located in the main.py file, is comprised of a series of "helper functions" (abstractions) and one large, recursive solve function. With the use of the abstractions, the recursive function uses the following workflow to determine a solution for the inputted sudoku puzzle.
 
-![Sudoku Workflow Diagram](img/sudoku_diagram.PNG)
+![Sudoku Workflow Diagram](img/sudoku_diagram.png)
 
 ## API Details
 
