@@ -11,9 +11,12 @@
 
 <html>
     <body>
-        <div id="app">
+        <center>
+        <div id="app" style="height: 80vh">
+            <h1 class="title">{{ title }}</h1>
             <entry-box></entry-box>
-            <button class="button" v-on:click="solve">Greet</button>
+            <button class="button" v-on:click="solve">Solve</button>
+            <h5>{{ footer }}</h1>
         </div>
         
         <script src="./js/app.js"></script>

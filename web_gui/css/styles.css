@@ -4,45 +4,69 @@ body {
 
 div .entry-box {
     padding: 0px;
-    width: 70px;
+    width: 50px;
     display: inline-block;
 }
 
 .entry-box-input {
-    height: 70px;
+    height: 50px;
     width: 100%;
     top: 0px;
-    font-size: 40px;
+    font-size: 30px;
     text-align: center;
     -webkit-transition: background-color .5s, color .5s;
     transition: background-color .5s, color .5s;
-    border: 2px solid black;
+    border: 1px solid black;
 }
 
-.entry-box-input:active, .entry-box-input:focus, .entry-box-input:hover {
+.right-border {
+    border-right: 3px solid black;
+}
+
+.left-border {
+    border-left: 3px solid black;
+}
+
+.top-border {
+    border-top: 3px solid black;
+}
+
+.bottom-border {
+    border-bottom: 3px solid black;
+}
+
+.entry-box-input:active,
+.entry-box-input:focus,
+.entry-box-input:hover {
     background-color: gray;
     cursor: pointer;
     color: white;
-    border: 2px solid black
+    padding: 0px;
+    margin: 0px;
+    outline: none;
 }
 
-
-/* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
-/* Firefox */
 input[type=number] {
-  -moz-appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+.title {
+    margin-top: 30px;
 }
 
 .button {
+    margin: 20px;
+    width: 450px;
+    font-size: 30px;
     border-radius: 5px;
     border: 0px solid white;
     color: white;
-    background-color: green;
+    background-color: #0ec73f;
     padding: 10px
 }
