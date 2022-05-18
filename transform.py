@@ -2,6 +2,10 @@
 # A full list of the resources I used for this project will be available on the README.md of this repository
 
 # Code for order_points is from https://pyimagesearch.com/2014/08/25/4-point-opencv-getperspective-transform-example/
+import numpy as np
+import cv2
+
+
 def order_points(pts):
 
     rect = np.zeros((4, 2), dtype="float32")

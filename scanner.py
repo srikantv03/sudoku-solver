@@ -7,10 +7,14 @@ import numpy as np
 import imutils
 import matplotlib.pyplot as plt
 from transform import *
+from classifier import *
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-
+def relu(value):
+    if value < 0:
+        return 0
+    return value
 def getImageSudoku(imgPath, debug=True):
     image = cv2.imread(imgPath)
     imgray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -22,6 +26,8 @@ def getImageSudoku(imgPath, debug=True):
 
     selectedCoords = np.array(separateBoard(image, debug=debug), dtype="float32")
     warped = four_point_transform(orig_img, selectedCoords)
+    plt.imshow(warped)
+    plt.show()
     getCells(warped)
     cv2.imshow("Warped Image", warped)
     cv2.waitKey()
@@ -68,6 +74,34 @@ def separateBoard(img, debug=False):
 
     return selectedCoords
 
+def warpCell(image):
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    grayImage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    (thresh, blackAndWhiteImage) = cv2.threshold(grayImage, 127, 255, cv2.THRESH_BINARY)
+    keypoints = cv2.findContours(blackAndWhiteImage.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    contours = imutils.grab_contours(keypoints)
+
+    newimg = cv2.drawContours(image.copy(), contours, -1, (0, 255, 0), 3)
+    cv2.imshow("Contour", newimg)
+    contours = sorted(contours, key=cv2.contourArea, reverse=True)[:15]
+    location = []
+
+    # Finds rectangular contour
+    for contour in contours:
+        approx = cv2.approxPolyDP(contour, 15, True)
+        if len(approx) == 4:
+            location = approx
+            break
+
+    if len(location) == 0:
+        return image
+    selectedCoords = []
+    for coords in location:
+        selectedCoords.append((coords[0][0], coords[0][1]))
+    selectedCoords = np.array(selectedCoords, dtype="float32")
+    warped = four_point_transform(image, selectedCoords)
+    return warped
+
 def getCells(image):
     # Get the cells and perform a tesseract scrape with the cells
     # TODO: replace the tesseract scrape with a trained CNN
@@ -76,18 +110,14 @@ def getCells(image):
     h = image.shape[0]
     cw = w/9
     ch = h/9
-    print(cw)
-    print(ch//1)
 
     for i in range(9):
         for j in range(9):
-            (y1, y2) = (int((j * ch)//1), int(((j + 1) * ch)))
-            (x1, x2) = (int(i * cw), int((i + 1) * cw))
-            wb = int(cw//5)
-            hb = int(ch//5)
-            cell = image[y1+hb:y2-hb, x1+wb:x2-wb]
+            (y1, y2) = (int(j * ch - ch/4), int((j + 1) * ch + ch/4))
+            (x1, x2) = (int(i * cw - ch/4), int((i + 1) * cw + cw/4))
+            cell = warpCell(image[relu(y1):y2, relu(x1):x2])
             print(pytesseract.image_to_string(cell, config='--psm 11 --oem 1 -c tessedit_char_whitelist=0123456789'))
 
-            # plt.imshow(cell)
-            # plt.show()
-getImageSudoku('sudoku_sample2.jpg', debug=True)
+            plt.imshow(warpCell(cell))
+            plt.show()
+getImageSudoku('sample_image2.jpg', debug=True)
