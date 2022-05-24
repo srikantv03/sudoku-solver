@@ -8,13 +8,19 @@ import imutils
 import matplotlib.pyplot as plt
 from transform import *
 from classifier import *
+from main import *
+import tensorflow as tf
 
+
+digit_prediction = tf.keras.models.load_model('model/final_model')
+digit_prediction.summary()
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 def relu(value):
     if value < 0:
         return 0
     return value
+
 def getImageSudoku(imgPath, debug=True):
     image = cv2.imread(imgPath)
     imgray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -49,7 +55,8 @@ def separateBoard(img, debug=False):
     edged = cv2.Canny(bfilter, 30, 180)
     keypoints = cv2.findContours(edged.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     contours = imutils.grab_contours(keypoints)
-
+    plt.imshow(edged)
+    plt.show()
     newimg = cv2.drawContours(img.copy(), contours, -1, (0, 255, 0), 3)
     cv2.imshow("Contour", newimg)
 
@@ -67,15 +74,14 @@ def separateBoard(img, debug=False):
     selectedCoords = []
     for coords in location:
         selectedCoords.append((coords[0][0], coords[0][1]))
-        if debug:
-            plt.imshow(img)
-            plt.plot(coords[0][0], coords[0][1], "or", markersize=10)
-            plt.show()
+        # if debug:
+        #     # plt.imshow(img)
+        #     # plt.plot(coords[0][0], coords[0][1], "or", markersize=10)
+        #     # plt.show()
 
     return selectedCoords
 
 def warpCell(image):
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     grayImage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     (thresh, blackAndWhiteImage) = cv2.threshold(grayImage, 127, 255, cv2.THRESH_BINARY)
     keypoints = cv2.findContours(blackAndWhiteImage.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -110,14 +116,28 @@ def getCells(image):
     h = image.shape[0]
     cw = w/9
     ch = h/9
-
+    sudoku = []
     for i in range(9):
+        sudoku.append(list())
         for j in range(9):
             (y1, y2) = (int(j * ch - ch/4), int((j + 1) * ch + ch/4))
             (x1, x2) = (int(i * cw - ch/4), int((i + 1) * cw + cw/4))
             cell = warpCell(image[relu(y1):y2, relu(x1):x2])
-            print(pytesseract.image_to_string(cell, config='--psm 11 --oem 1 -c tessedit_char_whitelist=0123456789'))
+            nh = cell.shape[0]
+            nw = cell.shape[1]
+            cell = cell[int(nh/20):int(19 * nh/20), int(nw/20): int(19 * nw/20)]
+            gray = cv2.cvtColor(cell, cv2.COLOR_BGR2GRAY)
+            gray[np.where(gray >= 150)] = 255
+            gray[np.where(gray < 150)] = 0
+            gray = cv2.resize(gray, (28, 28))
+            gray[np.where(gray >= 200)] = 255
+            gray[np.where(gray < 200)] = 0
+            gray = cv2.bitwise_not(gray)
 
-            plt.imshow(warpCell(cell))
-            plt.show()
-getImageSudoku('sample_image2.jpg', debug=True)
+            if (np.sum(gray) == 0):
+                sudoku[i].append(0)
+                continue
+
+            sudoku[i].append(np.argmax(digit_prediction.predict(tf.reshape(gray, [-1, 28, 28, 1]))))
+    print(solve(sudoku))
+getImageSudoku('sudoku_sample4.png', debug=True)
