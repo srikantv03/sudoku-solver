@@ -22,6 +22,10 @@ def order_points(pts):
 
 # Code for four_point_transform is from https://pyimagesearch.com/2014/08/25/4-point-opencv-getperspective-transform-example/
 def four_point_transform(image, pts):
+    print(pts.size)
+    print(pts)
+    if pts.size < 4:
+        return None
     rect = order_points(pts)
     (tl, tr, br, bl) = rect
 
