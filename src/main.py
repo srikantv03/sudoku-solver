@@ -1,7 +1,20 @@
 import numpy as np
 import json2 as json
+import tornado.escape
 from tornado.web import Application, RequestHandler
 from tornado.ioloop import IOLoop
+from scanner import getImageSudoku
+from io import BytesIO
+import base64
+import cv2
+from urllib.parse import unquote
+
+
+def readb64(uri):
+   encoded_data = uri.split(',')[1]
+   nparr = np.fromstring(base64.b64decode(encoded_data), np.uint8)
+   img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+   return img
 
 
 def hasBlanks(puzzle):
@@ -118,8 +131,17 @@ class SudokuHandler(RequestHandler):
         self.write({'solved': solved})
 
 
+class ScannerHandler(RequestHandler):
+    def post(self):
+        self.set_header("Access-Control-Allow-Origin", "*")
+        image = readb64(self.get_body_argument("image"))
+        scanned = getImageSudoku(image, debug=False)
+        print(scanned)
+        self.write({'scanned': str(scanned)})
+
+
 def make_app():
-    urls = [("/solve", SudokuHandler)]
+    urls = [('/solve', SudokuHandler), ('/scan', ScannerHandler)]
     return Application(urls)
 
 

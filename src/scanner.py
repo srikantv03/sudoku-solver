@@ -8,13 +8,30 @@ import imutils
 import matplotlib.pyplot as plt
 from transform import *
 from classifier import *
-from main import *
 import tensorflow as tf
+
+def getImageSudoku(image, debug=True):
+    # image = cv2.imread(imgPath)
+    imgray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    ret, thresh = cv2.threshold(imgray, 127, 255, 0)
+    contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    orig_img = image
+
+    selected_coords = np.array(separateBoard(image, debug=debug), dtype="float32")
+    transformed_image = four_point_transform(orig_img, selected_coords)
+    if debug:
+        cv2.imshow("Transformed Image", transformed_image)
+        cv2.waitKey()
+
+    return getCells(transformed_image)
+
+
 
 def contourSeparation(edged, check_for_edges = False):
     keypoints = cv2.findContours(edged.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     contours = imutils.grab_contours(keypoints)
-
+    # cv2.imshow('title', edged)
+    # cv2.waitKey()
     contours = sorted(contours, key=cv2.contourArea, reverse=True)[:15]
     location = None
 
@@ -28,31 +45,17 @@ def contourSeparation(edged, check_for_edges = False):
 
     # Show all the contours if the debug option is shown
     selectedCoords = []
-    for coords in location:
-        selectedCoords.append((coords[0][0], coords[0][1]))
+    if isinstance(location, (np.ndarray, np.generic) ):
+        for coords in location:
+            selectedCoords.append((coords[0][0], coords[0][1]))
 
-    return selectedCoords
+    return np.array(selectedCoords)
 
 def relu(value):
     if value < 0:
         return 0
     return value
 
-def getImageSudoku(imgPath, debug=True):
-    image = cv2.imread(imgPath)
-    imgray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    ret, thresh = cv2.threshold(imgray, 127, 255, 0)
-    contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    orig_img = cv2.imread(imgPath)
-
-    selected_coords = np.array(separateBoard(image, debug=debug), dtype="float32")
-    transformed_image = four_point_transform(orig_img, selected_coords)
-
-    getCells(transformed_image)
-
-    if debug:
-        cv2.imshow("Transformed Image", transformed_image)
-        cv2.waitKey()
 
 def checkNotBorder(location):
     for coord in location:
@@ -86,8 +89,8 @@ def getCells(image):
             (y1, y2) = (int(j * ch - ch/4), int((j + 1) * ch + ch/4))
             (x1, x2) = (int(i * cw - ch/4), int((i + 1) * cw + cw/4))
             cell = warpCell(image[relu(y1):y2, relu(x1):x2])
-
-            sudoku[i].append(cell)
-    print(solve(sudoku))
-
-getImageSudoku('sudoku_sample4.png', debug=True)
+            if not isinstance(cell, (np.ndarray, np.generic)):
+                sudoku[i].append(0)
+                continue
+            sudoku[i].append(detect(cell))
+    return sudoku
