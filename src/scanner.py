@@ -1,14 +1,8 @@
 # Some of the following code was sourced on the internet to help me create this project
 # A full list of the resources I used for this project will be available on the README.md of this repository
 
-import pytesseract
-import cv2
-import numpy as np
-import imutils
-import matplotlib.pyplot as plt
-from transform import *
-from classifier import *
-import tensorflow as tf
+from src.transform import *
+from src.classifier import *
 
 def getImageSudoku(image, debug=True):
     # image = cv2.imread(imgPath)
