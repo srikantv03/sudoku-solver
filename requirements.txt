@@ -1,0 +1,10 @@
+tensorflow~=2.9.0
+numpy~=1.21.2
+matplotlib~=3.5.2
+sklearn~=0.0
+scikit-learn~=1.1.0
+json2~=0.4.0
+tornado~=6.1
+opencv-python~=4.5.5.64
+pytesseract~=0.3.9
+imutils~=0.5.4
