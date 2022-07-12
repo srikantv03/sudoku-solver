@@ -6,7 +6,7 @@ This is just a simple side-project which combines my recreational hobby of sudok
 
 The core algorithm, located in the main.py file, is comprised of a series of "helper functions" (abstractions) and one large, recursive solve function. With the use of the abstractions, the recursive function uses the following workflow to determine a solution for the inputted sudoku puzzle.
 
-![Sudoku Workflow Diagram](img/sudoku_diagram.PNG)
+![Sudoku Workflow Diagram](img/sudoku_diagram.png)
 
 ## API Details
 
@@ -19,3 +19,17 @@ The gui for this application serves the purpose of calling the api in a non-prog
 The following is the layout of the gui:
 
 ![GUI Diagram](img/ui_ss.PNG)
+
+## Visual Sudoku Solver
+
+As an addition to the original algorithm, I have also worked on implementing ways for users to scan a sudoku puzzle and solve it using the algorithm and some computer vision.
+
+The algorithm uses 4 steps to solve a sudoku board from the image
+
+1. Using contour imaging, the algorithm looks for all quadrilateral (could be a sudoku board) contours, and chooses the largest one that is not directly adjacent to the border of the image
+
+2. Since 9x9 sudoku boards are standard in having 81 squares, the algorithm is able to divide the sudoku board into 81 squares using a similar contour imaging process as in the first step
+
+3. Using a trained model on the MNIST handwritten digits database, the algorithm uses a CNN to match the pixels in each cell of the sudoku board to a digit from 1-9, or a blank sudoku square
+
+4. Finally, the algorithm sends this sudoku board to the API, and gets a response with the solution

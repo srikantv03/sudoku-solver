@@ -1,5 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<<<<<<< HEAD
     package="com.example.mobile">
+=======
+    package="xyz.sudokusri.mobile_sudoku">
+>>>>>>> 1199ca230ea413f0a03d4742c775365c83398681
     <!-- Flutter needs it to communicate with the running application
          to allow setting breakpoints, to provide hot reload, etc.
     -->
