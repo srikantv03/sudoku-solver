@@ -11,11 +11,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-<<<<<<< HEAD
-	<string>mobile</string>
-=======
 	<string>mobile_sudoku</string>
->>>>>>> 1199ca230ea413f0a03d4742c775365c83398681
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

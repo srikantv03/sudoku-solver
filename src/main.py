@@ -3,7 +3,7 @@ import json2 as json
 import tornado.escape
 from tornado.web import Application, RequestHandler
 from tornado.ioloop import IOLoop
-from scanner import getImageSudoku
+from src.scanner import getImageSudoku
 from io import BytesIO
 import base64
 import cv2

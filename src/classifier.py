@@ -5,7 +5,7 @@ import imutils
 import matplotlib.pyplot as plt
 import tensorflow as tf
 
-digit_prediction = tf.keras.models.load_model('model/final_model')
+digit_prediction = tf.keras.models.load_model('src/model/final_model')
 digit_prediction.summary()
 
 

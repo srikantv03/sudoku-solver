@@ -1,9 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-
     package="xyz.sudokusri.mobile_sudoku">
    <application
         android:label="mobile_sudoku"
-
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
