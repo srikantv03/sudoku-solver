@@ -1,4 +1,4 @@
-# Sudoku-Solver (unfinished)
+# Sudoku-Solver
 
 This is just a simple side-project which combines my recreational hobby of sudoku with my programming. This is an attempt to make an algorithm by myself, pooling little to no outside help and mapping the logic individually.
 
