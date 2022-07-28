@@ -1,4 +1,4 @@
-# ignore frontend and resource directoriest a
+# ignore frontend and resource directories
 /img
 /mobile
 /web_gui
