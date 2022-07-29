@@ -1,8 +1,10 @@
 import numpy as np
 from flask import Flask, request
+from flask_api import status
 import cv2
 import base64
-import src.main
+import json
+from src.main import SudokuBoard
 
 app = Flask(__name__)
 
@@ -13,14 +15,23 @@ def readb64(uri):
    return img
 
 @app.route('/solve', methods=['GET'])
-def search():
+def solve():
    args = request.args
-   console.log(args)
+   if "puzzle" in args:
+      puzzle = json.loads(args.get("puzzle"), None, True)
+      sudoku_board = SudokuBoard(puzzle)
+      return sudoku_board
+
+   return {"error": "Puzzle not found"}, status.HTTP_400_BAD_REQUEST
+
+
+
+
 
 # class SudokuHandler(RequestHandler):
 #    def get(self):
 #       self.set_header("Access-Control-Allow-Origin", "*")
-#       puzzle = list(json.loads(self.get_argument("puzzle", None, True)))
+#      puzzle = list(json.loads(self.get_argument("puzzle", None, True)))
 #       solved = [list(map(int, arr)) for arr in solve(puzzle)]
 #       self.write({'solved': solved})
 #

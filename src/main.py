@@ -1,8 +1,9 @@
 import numpy as np
 
+
 class SudokuBoard:
 
-    def __init__(self, puzzle: str, image=None):
+    def __init__(self, puzzle: list, image=None):
         for _ in range(len(puzzle)):
             if len(puzzle) != len(puzzle[_]):
                 raise Exception("Puzzle is not of square shape")
@@ -26,7 +27,7 @@ class SudokuBoard:
                     return True
         return False
 
-    def getSquare(self, row: int, col: int):
+    def getSquare(self, row: int, col: int) -> list:
         square = list()
         squareSide = int(np.sqrt(len(self.puzzle)))
         rowSect = int(row / squareSide)
@@ -36,32 +37,32 @@ class SudokuBoard:
                 square.append(self.puzzle[i][j])
         return square
 
-    def getRow(self, row: int, col: int):
+    def getRow(self, row: int, col: int) -> list:
         returnArr = list()
         for i in range(self.sideLength):
             returnArr.append(self.puzzle[row][i])
         return returnArr
 
-    def getColumn(self, row: int, col: int):
+    def getColumn(self, row: int, col: int) -> list:
         returnArr = list()
         for i in range(len(self.puzzle)):
             returnArr.append(self.puzzle[i][col])
         return returnArr
 
-    def makeNotes(self):
+    def makeNotes(self) -> list:
         nums = list(range(1, self.sideLength + 1))
         notes = list()
         for i in range(self.sideLength):
             notes.append([])
             for j in range(self.sideLength):
-                if (self.puzzle[i][j] != 0):
+                if self.puzzle[i][j] != 0:
                     notes[i].append([0])
                 else:
                     notAllowed = list(set(self.getSquare(i, j) + self.getRow(i, j) + self.getColumn(i, j)))
                     notes[i].append(list(np.setdiff1d(nums, notAllowed)))
         return notes
 
-    def decipherNotes(self, notes: list):
+    def decipherNotes(self, notes: list) -> list:
         amtFixed = 0
         for i in range(self.sideLength):
             for j in range(len(self.puzzle[0])):
@@ -75,26 +76,26 @@ class SudokuBoard:
                             amtFixed += 1
                             self.puzzle[i][j] = k
                             break
-        if (amtFixed == 0):
+        if amtFixed == 0:
             return None
         return self.puzzle
 
-    def solve(self):
+    def solve(self) -> list:
         amtFixed = 0
-        notes = self.makeNotes(self.puzzle)
+        notes = self.makeNotes()
         for i in range(len(notes)):
             for j in range(len(notes)):
-                if (len(notes[i][j]) == 1 and notes[i][j][0] != 0):
+                if len(notes[i][j]) == 1 and notes[i][j][0] != 0:
                     amtFixed += 1
                     self.puzzle[i][j] = notes[i][j][0]
         if amtFixed == 0:
-            temp = self.decipherNotes(notes, self.puzzle)
+            temp = self.decipherNotes(notes)
             if temp is not None:
-                return self.solve(temp)
+                return self.solve()
             else:
                 return self.puzzle
-        if self.hasBlanks(self.puzzle):
-            return self.solve(self.puzzle)
+        if self.hasBlanks():
+            return self.solve()
         else:
             return self.puzzle
 
@@ -103,6 +104,3 @@ class SudokuBoard:
             for j in range(self.sideLength):
                 print(str(self.puzzle[i][j]), end=" ")
             print('\n')
-
-
-
