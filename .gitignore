@@ -132,6 +132,7 @@ dmypy.json
 
 # Images and other assets
 *.png
+!img/*.png
 *.jpg
 
 # Miscellaneous

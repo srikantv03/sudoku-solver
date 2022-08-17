@@ -94,3 +94,6 @@ def getCells(image):
                 continue
             sudoku[i].append(detect(cell))
     return sudoku
+
+
+getImageSudoku()
