@@ -26,6 +26,7 @@ def getImageSudoku(image, debug=True):
     return getCells(transformed_image)
 
 
+# some code here is inspired by https://pyimagesearch.com/2020/08/10/opencv-sudoku-solver-and-ocr/
 
 def contourSeparation(edged, check_for_edges = False):
     keypoints = cv2.findContours(edged.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -64,12 +65,16 @@ def checkNotBorder(location):
 
     return True
 
+# some code here is inspired by https://pyimagesearch.com/2020/08/10/opencv-sudoku-solver-and-ocr/
+
 def separateBoard(img, debug=False):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     bfilter = cv2.bilateralFilter(gray, 13, 20, 20)
     edged = cv2.Canny(bfilter, 30, 180)
 
     return contourSeparation(edged, check_for_edges=True)
+
+# some code here is inspired by https://pyimagesearch.com/2020/08/10/opencv-sudoku-solver-and-ocr/
 
 def warpCell(image):
     grayImage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
