@@ -2,6 +2,8 @@
 
 This is just a simple side-project which combines my recreational hobby of sudoku with my programming. This is an attempt to make an algorithm by myself, pooling little to no outside help and mapping the logic individually.
 
+Please read the bottom of the README for references and inspiration
+
 ## Inner Workings
 
 The core algorithm, located in the main.py file, is comprised of a series of "helper functions" (abstractions) and one large, recursive solve function. With the use of the abstractions, the recursive function uses the following workflow to determine a solution for the inputted sudoku puzzle.
@@ -33,3 +35,12 @@ The algorithm uses 4 steps to solve a sudoku board from the image
 3. Using a trained model on the MNIST handwritten digits database, the algorithm uses a CNN to match the pixels in each cell of the sudoku board to a digit from 1-9, or a blank sudoku square
 
 4. Finally, the algorithm sends this sudoku board to the API, and gets a response with the solution
+
+
+## References
+
+1. [OpenCV Sudoku Solver and OCR](https://pyimagesearch.com/2020/08/10/opencv-sudoku-solver-and-ocr/)
+2. [Classify Handwritten-Digits With Tensorflow](https://www.marktechpost.com/2019/10/16/classify-handwritten-digits-with-tensorflow/#:~:text=The%20MNIST%20Handwritten%20Digit%20is,digits%20between%200%20and%209.)
+3. [Four Point Transform](https://pyimagesearch.com/2014/08/25/4-point-opencv-getperspective-transform-example/)
+
+Direct applications of the code seen in these references will explicitly be noted in the code.
