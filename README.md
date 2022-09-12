@@ -32,7 +32,7 @@ The algorithm uses 4 steps to solve a sudoku board from the image
 
 2. Since 9x9 sudoku boards are standard in having 81 squares, the algorithm is able to divide the sudoku board into 81 squares using a similar contour imaging process as in the first step
 
-3. Using a trained model on the MNIST handwritten digits database, the algorithm uses a CNN to match the pixels in each cell of the sudoku board to a digit from 1-9, or a blank sudoku square
+3. Using a trained model on the MNIST handwritten digits database, the algorithm uses a CNN to match the pixels in each cell of the sudoku board to a digit from 1-9, or a blank sudoku square. The current model runs at an accuracy of about ~90%; measures were taken in order to prevent overfitting.
 
 4. Finally, the algorithm sends this sudoku board to the API, and gets a response with the solution
 
